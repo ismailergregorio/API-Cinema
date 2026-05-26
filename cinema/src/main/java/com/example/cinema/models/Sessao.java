@@ -10,20 +10,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-@Document(collection = "filmes")
-@Data
+@Document(collection = "sessao")
+@Data 
 @NoArgsConstructor
 @AllArgsConstructor
-public class Filme {
+public class Sessao {
  @Id
  private String id;
- private String titulo;
- private String genero;
- private int duracao;
- private int clasificacao;
- private Boolean diponivel;
-
+ private String sala;
+ private String horario;
+ private Float preco;
  @CreatedDate
  private LocalDateTime dataCriacao;
 

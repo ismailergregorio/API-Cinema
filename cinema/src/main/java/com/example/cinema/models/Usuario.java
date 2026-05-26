@@ -11,19 +11,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "filmes")
+@Document(collection = "usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Filme {
+public class Usuario {
  @Id
  private String id;
- private String titulo;
- private String genero;
- private int duracao;
- private int clasificacao;
- private Boolean diponivel;
-
+ private String nome;
+ private String email;
+ private String senha;
  @CreatedDate
  private LocalDateTime dataCriacao;
 
