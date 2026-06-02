@@ -17,9 +17,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Filme {
-    @Id
-    private String id;
 
+    private String id;
     private boolean adult;
     private String backdropPath;
     private List<Integer> genreIds;

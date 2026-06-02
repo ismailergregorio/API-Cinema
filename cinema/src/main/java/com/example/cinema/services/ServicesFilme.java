@@ -1,6 +1,7 @@
 package com.example.cinema.services;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.cinema.DTO.DTOPostFilmes;
+import com.example.cinema.models.Categorias;
 import com.example.cinema.models.Filme;
+import com.example.cinema.repository.RepositoryCategorias;
 import com.example.cinema.repository.RepositoryFilmes;
 
 @Service
@@ -18,14 +21,29 @@ public class ServicesFilme {
   @Autowired
   private RepositoryFilmes repository;
 
+  @Autowired
+  RepositoryCategorias repositoryCategorias;
+
   // ==================================================
   // CRIAR FILME
   // ==================================================
 
   public Filme createFilmes(DTOPostFilmes dto) {
 
-    Filme filme = new Filme();
+    List<Categorias> categorias = dto.genreIds().stream()
+        .map(id -> repositoryCategorias.findById(id)
+            .orElse(null))
+        .filter(Objects::nonNull)
+        .toList();
 
+    if (categorias.size() != dto.genreIds().size()) {
+
+      throw new RuntimeException(
+          "Uma ou mais categorias não existem.");
+    }
+
+    Filme filme = new Filme();
+    filme.setId(dto.id());
     filme.setTitle(dto.title());
     filme.setOriginalTitle(dto.originalTitle());
     filme.setOriginalLanguage(dto.originalLanguage());
@@ -135,6 +153,7 @@ public class ServicesFilme {
         .map(dto -> {
           Filme filme = new Filme();
 
+          filme.setId(dto.id());
           filme.setTitle(dto.title());
           filme.setOriginalTitle(dto.originalTitle());
           filme.setOriginalLanguage(dto.originalLanguage());
@@ -155,5 +174,13 @@ public class ServicesFilme {
         .toList();
 
     return repository.saveAll(filmes);
+  }
+
+  public List<Filme> listaFilmesCategorias(Integer id) {
+    return repository.findByGenreIds(id);
+  }
+
+  public List<Filme> BuscaFilmesNome(String nome) {
+    return repository.findByTitleContainingIgnoreCase(nome);
   }
 }

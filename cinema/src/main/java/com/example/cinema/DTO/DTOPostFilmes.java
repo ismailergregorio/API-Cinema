@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record DTOPostFilmes(
 
+        String id,
+
         Boolean adult,
 
         @JsonProperty("backdrop_path")
