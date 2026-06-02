@@ -1,20 +1,46 @@
 package com.example.cinema.DTO;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record DTOPostFilmes(
 
-  @NotBlank(message = "Título é obrigatório") String titulo,
+        Boolean adult,
 
-  @NotBlank(message = "Gênero é obrigatório") String genero,
+        @JsonProperty("backdrop_path")
+        String backdropPath,
 
-  @Positive(message = "Duração deve ser maior que 0") int duracao,
+        @JsonProperty("genre_ids")
+        List<Integer> genreIds,
 
-  @Positive(message = "Classificação deve ser maior que 0") int clasificacao,
+        String title,
 
-  @NotNull(message = "Disponibilidade é obrigatória") Boolean diponivel
+        @JsonProperty("original_language")
+        String originalLanguage,
+
+        @JsonProperty("original_title")
+        String originalTitle,
+
+        String overview,
+
+        Double popularity,
+
+        @JsonProperty("poster_path")
+        String posterPath,
+
+        @JsonProperty("release_date")
+        String releaseDate,
+
+        Boolean softcore,
+
+        Boolean video,
+
+        @JsonProperty("vote_average")
+        Double voteAverage,
+
+        @JsonProperty("vote_count")
+        Integer voteCount
 
 ) {
 }

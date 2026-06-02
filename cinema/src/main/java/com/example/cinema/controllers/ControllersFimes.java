@@ -3,7 +3,6 @@ package com.example.cinema.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,92 +27,107 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/filmes")
-
 @CrossOrigin("*")
 public class ControllersFimes {
 
- @Autowired
- ServicesFilme service;
+    @Autowired
+    private ServicesFilme service;
 
- // ==================================================
- // CRIAR FILME
- // ==================================================
+    // ==================================================
+    // CRIAR FILME
+    // ==================================================
 
- @PostMapping
- @Operation(summary = "Criar filme")
- public ResponseEntity<?> createFilme(
+    @PostMapping
+    @Operation(summary = "Criar filme")
+    public ResponseEntity<Filme> createFilme(
 
-   @Valid @RequestBody DTOPostFilmes filme
+            @Valid @RequestBody DTOPostFilmes filme
 
- ) {
+    ) {
 
-  Filme novoFilme = service.criateFilmes(filme);
+        Filme novoFilme = service.createFilmes(filme);
 
-  return ResponseEntity
-    .status(HttpStatus.CREATED)
-    .body(novoFilme);
- }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novoFilme);
+    }
 
- // ==================================================
- // LISTAR TODOS FILMES
- // ==================================================
+    // ==================================================
+    // CRIAR LISTA DE FILMES
+    // ==================================================
 
- @GetMapping
- @Operation(summary = "Listar filmes")
- public ResponseEntity<List<Filme>> getFilmes() {
+    @PostMapping("/lista")
+    @Operation(summary = "Criar lista de filmes")
+    public ResponseEntity<List<Filme>> createListaFilmes(
 
-  return ResponseEntity
-    .status(HttpStatus.OK)
-    .body(service.getFilmes());
- }
+            @RequestBody List<DTOPostFilmes> filmes
 
- // ==================================================
- // BUSCAR FILME POR ID
- // ==================================================
+    ) {
 
- @GetMapping("/{id}")
+        List<Filme> novosFilmes = service.createListaFilmes(filmes);
 
- @Operation(summary = "Buscar filme por ID")
- public ResponseEntity<?> getFilme(
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novosFilmes);
+    }
 
-   @PathVariable String id
+    // ==================================================
+    // LISTAR TODOS OS FILMES
+    // ==================================================
 
- ) {
+    @GetMapping
+    @Operation(summary = "Listar filmes")
+    public ResponseEntity<List<Filme>> getFilmes() {
 
-  return service.getFilme(id);
- }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.getFilmes());
+    }
 
- // ==================================================
- // ATUALIZAR FILME
- // ==================================================
+    // ==================================================
+    // BUSCAR FILME POR ID
+    // ==================================================
 
- @PutMapping("/{id}")
+    @GetMapping("/{id}")
+    @Operation(summary = "Buscar filme por ID")
+    public ResponseEntity<?> getFilme(
 
- @Operation(summary = "Atualizar filme")
- public ResponseEntity<?> updateFilme(
+            @PathVariable String id
 
-   @PathVariable String id,
+    ) {
 
-   @Valid @RequestBody DTOPostFilmes filme
+        return service.getFilme(id);
+    }
 
- ) {
+    // ==================================================
+    // ATUALIZAR FILME
+    // ==================================================
 
-  return service.updateFilme(id, filme);
- }
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar filme")
+    public ResponseEntity<?> updateFilme(
 
- // ==================================================
- // DELETAR FILME
- // ==================================================
+            @PathVariable String id,
 
- @DeleteMapping("/{id}")
+            @Valid @RequestBody DTOPostFilmes filme
 
- @Operation(summary = "Deletar filme")
- public ResponseEntity<?> deleteFilme(
+    ) {
 
-   @PathVariable String id
+        return service.updateFilme(id, filme);
+    }
 
- ) {
+    // ==================================================
+    // DELETAR FILME
+    // ==================================================
 
-  return service.deleteFilme(id);
- }
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar filme")
+    public ResponseEntity<?> deleteFilme(
+
+            @PathVariable String id
+
+    ) {
+
+        return service.deleteFilme(id);
+    }
 }

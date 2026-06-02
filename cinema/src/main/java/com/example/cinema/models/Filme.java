@@ -1,6 +1,7 @@
 package com.example.cinema.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -16,17 +17,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Filme {
- @Id
- private String id;
- private String titulo;
- private String genero;
- private int duracao;
- private int clasificacao;
- private Boolean diponivel;
+    @Id
+    private String id;
 
- @CreatedDate
- private LocalDateTime dataCriacao;
+    private boolean adult;
+    private String backdropPath;
+    private List<Integer> genreIds;
+    private String title;
+    private String originalLanguage;
+    private String originalTitle;
+    private String overview;
+    private double popularity;
+    private String posterPath;
+    private String releaseDate;
+    private boolean softcore;
+    private boolean video;
+    private double voteAverage;
+    private int voteCount;
 
- @LastModifiedDate
- private LocalDateTime dataAtualizacao;
+    @CreatedDate
+    private LocalDateTime dataCriacao;
+
+    @LastModifiedDate
+    private LocalDateTime dataAtualizacao;
 }
