@@ -14,4 +14,8 @@ import lombok.NoArgsConstructor;
 public class Categorias {
     private Integer id;
     private String name;
+    public Categorias orElse(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElse'");
+    }
 }

@@ -10,7 +10,7 @@ import com.example.cinema.repository.RepositoryCategorias;
 @Service
 public class ServicesCategoria {
     @Autowired
-    private RepositoryCategorias repository;
+    RepositoryCategorias repository;
 
     public Categorias createCategoria(Categorias categoria) {
         return repository.save(categoria);

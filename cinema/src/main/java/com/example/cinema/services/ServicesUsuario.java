@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.Repository;
 import org.springframework.stereotype.Service;
 
+import com.example.cinema.DTO.DTOGetLoginUsuario;
 import com.example.cinema.DTO.DTOGetUsuario;
 import com.example.cinema.DTO.DTOPostUsuario;
 import com.example.cinema.models.Usuario;
@@ -31,4 +32,21 @@ public class ServicesUsuario {
     novoUsuario.getNome(),
     novoUsuario.getEmail());
  }
+
+ public DTOGetUsuario loginUsuario(DTOGetLoginUsuario dados) {
+  System.out.println("Email: " + dados.email());
+  System.out.println("Senha: " + dados.senha());
+  Usuario usuario = repositoryUsuario.findByEmail(dados.email())
+    .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+  if (!usuario.getSenha().equals(dados.senha())) {
+   throw new RuntimeException("Senha incorreta!");
+  }
+
+  return new DTOGetUsuario(
+    usuario.getId(),
+    usuario.getNome(),
+    usuario.getEmail());
+ }
+
 }
