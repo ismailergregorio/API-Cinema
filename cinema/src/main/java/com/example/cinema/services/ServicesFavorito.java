@@ -30,8 +30,8 @@ public class ServicesFavorito {
   // POST
   public Favorito criarFavorito(DTOPostFavorito dados) {
 
-    Filme filme = repositoryFilmes.findById(dados.filmeId())
-        .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
+    // Filme filme = repositoryFilmes.findById(dados.filmeId())
+    //     .orElseThrow(() -> new RuntimeException("Filme não encontrado"));
 
     Usuario usuario = repositoryUsuario.findById(dados.usuarioId())
         .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -39,7 +39,7 @@ public class ServicesFavorito {
     repositoryFavoritos
         .findByUsuarioIdAndFilmeId(
             usuario.getId(),
-            filme.getId())
+            dados.filmeId())
         .ifPresent(f -> {
           throw new RuntimeException(
               "Filme já favoritado");
@@ -49,7 +49,7 @@ public class ServicesFavorito {
     Favorito favorito = new Favorito();
 
     favorito.setUsuarioId(usuario.getId());
-    favorito.setFilmeId(filme.getId());
+    favorito.setFilmeId(dados.filmeId());
     favorito.setDataCriacao(LocalDateTime.now());
 
     return repositoryFavoritos.save(favorito);
@@ -58,6 +58,24 @@ public class ServicesFavorito {
   // GET ALL
   public Favorito bucasFavorito(String id) {
     return repositoryFavoritos.findById(id).orElseThrow(() -> new RuntimeException("Filme não disponivel"));
+  }
+
+  public Favorito buscarFavorioUser(String idUser, String idFilme) {
+
+    Optional<Favorito> favorito = repositoryFavoritos.findByUsuarioIdAndFilmeId(
+        idUser,
+        idFilme);
+
+    if (favorito.isPresent()) {
+      return favorito.get();
+    }
+
+    return null;
+  }
+
+  public List<Favorito> buscarFilmesFavoritosUsuario(String id) {
+    List<Favorito> idsFilmes = repositoryFavoritos.findByUsuarioId(id);
+    return idsFilmes;
   }
 
   // GET

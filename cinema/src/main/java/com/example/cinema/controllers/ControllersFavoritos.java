@@ -1,10 +1,12 @@
 package com.example.cinema.controllers;
 
+import com.example.cinema.repository.RepositoryFavoritos;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,52 +19,77 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cinema.DTO.DTOPostFavorito;
 import com.example.cinema.models.Favorito;
 import com.example.cinema.services.ServicesFavorito;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/favoritos")
+@CrossOrigin(origins = "*")
 public class ControllersFavoritos {
- @Autowired
- private ServicesFavorito servicesFavorito;
+  private final RepositoryFavoritos repositoryFavoritos;
+  @Autowired
+  private ServicesFavorito servicesFavorito;
 
- // POST
- @PostMapping
- public ResponseEntity<Favorito> criarFavorito(
-   @RequestBody DTOPostFavorito dados) {
+  ControllersFavoritos(RepositoryFavoritos repositoryFavoritos) {
+    this.repositoryFavoritos = repositoryFavoritos;
+  }
 
-  Favorito favorito = servicesFavorito.criarFavorito(dados);
+  // POST
+  @PostMapping
+  public ResponseEntity<Favorito> criarFavorito(
+      @RequestBody DTOPostFavorito dados) {
 
-  return ResponseEntity
-    .status(HttpStatus.CREATED)
-    .body(favorito);
- }
+    Favorito favorito = servicesFavorito.criarFavorito(dados);
 
- // GET ALL
- @GetMapping
- public ResponseEntity<List<Favorito>> buscarFavoritos() {
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(favorito);
+  }
 
-  List<Favorito> favoritos = servicesFavorito.bucarFavoritos();
+  // GET ALL
+  @GetMapping
+  public ResponseEntity<List<Favorito>> buscarFavoritos() {
 
-  return ResponseEntity.ok(favoritos);
- }
+    List<Favorito> favoritos = servicesFavorito.bucarFavoritos();
 
- // GET BY ID
- @GetMapping("/{id}")
- public ResponseEntity<Favorito> buscarFavorito(
-   @PathVariable String id) {
+    return ResponseEntity.ok(favoritos);
+  }
 
-  Favorito favorito = servicesFavorito.bucasFavorito(id);
+  // GET BY ID
+  @GetMapping("/{id}")
+  public ResponseEntity<Favorito> buscarFavorito(
+      @PathVariable String id) {
 
-  return ResponseEntity.ok(favorito);
- }
+    Favorito favorito = servicesFavorito.bucasFavorito(id);
 
- // DELETE
- @DeleteMapping("/{id}")
- public ResponseEntity<Void> deletarFavorito(
-   @PathVariable String id) {
+    return ResponseEntity.ok(favorito);
+  }
 
-  servicesFavorito.deleteFavorito(id);
+  @GetMapping("/{usuarioId}/{filmeId}")
+  public ResponseEntity<Favorito> buscarItenFavoritado(
+      @PathVariable String usuarioId,
+      @PathVariable String filmeId) {
 
-  return ResponseEntity.noContent().build();
- }
+    Favorito itemFavorito = servicesFavorito.buscarFavorioUser(usuarioId, filmeId);
+
+    if (itemFavorito == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(itemFavorito);
+  }
+
+  @GetMapping("listFavoritosUsuario/{id}")
+  public ResponseEntity<List<Favorito>> listaFavoriosUsuario(@PathVariable String id) {
+    return ResponseEntity.ok(servicesFavorito.buscarFilmesFavoritosUsuario(id));
+  }
+
+  // DELETE
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deletarFavorito(
+      @PathVariable String id) {
+
+    servicesFavorito.deleteFavorito(id);
+
+    return ResponseEntity.noContent().build();
+  }
 }

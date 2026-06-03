@@ -1,5 +1,7 @@
 package com.example.cinema.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,21 +26,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/user")
 public class ControllersUsuario {
 
- @Autowired
- ServicesUsuario servicesUsuario;
+   @Autowired
+   ServicesUsuario servicesUsuario;
 
- @PostMapping()
- public DTOGetUsuario creteUser(@RequestBody DTOPostUsuario usuario) {
-  return servicesUsuario.criaUsuario(usuario);
- }
+   @PostMapping()
+   public DTOGetUsuario creteUser(@RequestBody DTOPostUsuario usuario) {
+      return servicesUsuario.criaUsuario(usuario);
+   }
 
- @PostMapping("/login")
- public ResponseEntity<DTOGetUsuario> login(@RequestBody DTOGetLoginUsuario dados) {
+   @PostMapping("/login")
+   public ResponseEntity<DTOGetUsuario> login(@RequestBody DTOGetLoginUsuario dados) {
 
-    System.out.println("Email: " + dados.email());
-    System.out.println("Senha: " + dados.senha());
+      System.out.println("Email: " + dados.email());
+      System.out.println("Senha: " + dados.senha());
 
-    return ResponseEntity.ok(servicesUsuario.loginUsuario(dados));
- }
- 
+      return ResponseEntity.ok(servicesUsuario.loginUsuario(dados));
+   }
+
+   @GetMapping()
+   public List<DTOGetUsuario> usuariosGet() {
+      return servicesUsuario.buscarUsuarios();
+   }
+
 }
