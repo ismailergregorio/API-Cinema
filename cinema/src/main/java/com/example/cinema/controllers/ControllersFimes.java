@@ -27,7 +27,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/filmes")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 public class ControllersFimes {
 
         @Autowired
