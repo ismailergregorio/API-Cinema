@@ -11,6 +11,10 @@ public interface RepositoryFilmes extends MongoRepository<Filme, String> {
  List<Filme> findByGenreIds(Integer genreIds);
 
  List<Filme> findByTitleContainingIgnoreCase(String title);
+
+ List<Filme> findTop10ByGenreIdsInOrderByVoteAverageDesc(List<Integer> genreIds);
+
+ List<Filme> findTop20ByOrderByPopularityDescVoteAverageDescVoteCountDesc();
 }
 
 

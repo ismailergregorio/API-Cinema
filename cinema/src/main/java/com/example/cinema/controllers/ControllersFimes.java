@@ -1,5 +1,6 @@
 package com.example.cinema.controllers;
 
+import com.example.cinema.repository.RepositoryFilmes;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,20 @@ import com.example.cinema.services.ServicesFilme;
 import io.swagger.v3.oas.annotations.Operation;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/filmes")
 @CrossOrigin(origins = "*")
 public class ControllersFimes {
 
+        private final RepositoryFilmes repositoryFilmes;
         @Autowired
         private ServicesFilme service;
+
+        ControllersFimes(RepositoryFilmes repositoryFilmes) {
+                this.repositoryFilmes = repositoryFilmes;
+        }
 
         // ==================================================
         // CRIAR FILME
@@ -151,4 +158,29 @@ public class ControllersFimes {
                                 .status(HttpStatus.OK)
                                 .body(service.BuscaFilmesNome(nome));
         }
+
+        @GetMapping("/recomendados/{userId}")
+        @Operation(summary = "Buscar filmes recomendados por favoritos")
+        public ResponseEntity<List<Filme>> BuscarFilmesRecomendadosPorFavoritos(@PathVariable String userId) {
+                return ResponseEntity.ok().body(service.BuscarFilmesRecomendadosPorFavoritos(userId));
+        }
+
+        @GetMapping("/maisvistosuser")
+        public ResponseEntity<List<Filme>> getFilmesMaisVistosUser() {
+                return ResponseEntity.ok().body(service.filmesSemelhantes());
+        }
+
+        @GetMapping("/search/{nome}")
+        @Operation(summary = "Buscar filmes por nome")
+        public ResponseEntity<List<Filme>> searchFilmes(
+                        @PathVariable String nome) {
+                return ResponseEntity.ok().body(service.getFilmePorNome(nome));
+        }
+
+        @GetMapping("/maisVistos")
+        public ResponseEntity<List<Filme>> getFilmesMaisVistos() {
+                return ResponseEntity.ok().body(service.getFilmesMaisVistos());
+        }
+        
+
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cinema.DTO.DTOGetLoginUsuario;
 import com.example.cinema.DTO.DTOGetUsuario;
 import com.example.cinema.DTO.DTOPostUsuario;
+import com.example.cinema.models.Usuario;
 import com.example.cinema.repository.RepositoryUsuario;
 import com.example.cinema.services.ServicesUsuario;
 
@@ -46,6 +47,11 @@ public class ControllersUsuario {
    @GetMapping()
    public List<DTOGetUsuario> usuariosGet() {
       return servicesUsuario.buscarUsuarios();
+   }
+
+   @GetMapping("/all")
+   public List<Usuario> todosUsuarios() {
+      return servicesUsuario.users();
    }
 
 }

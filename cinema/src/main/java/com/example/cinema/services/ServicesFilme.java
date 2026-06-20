@@ -1,8 +1,11 @@
 package com.example.cinema.services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,8 +14,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.cinema.DTO.DTOPostFilmes;
 import com.example.cinema.models.Categorias;
+import com.example.cinema.models.Favorito;
 import com.example.cinema.models.Filme;
 import com.example.cinema.repository.RepositoryCategorias;
+import com.example.cinema.repository.RepositoryFavoritos;
 import com.example.cinema.repository.RepositoryFilmes;
 
 @Service
@@ -23,6 +28,9 @@ public class ServicesFilme {
 
   @Autowired
   RepositoryCategorias repositoryCategorias;
+
+  @Autowired
+  RepositoryFavoritos repositoryFavoritos;
 
   // ==================================================
   // CRIAR FILME
@@ -182,5 +190,55 @@ public class ServicesFilme {
 
   public List<Filme> BuscaFilmesNome(String nome) {
     return repository.findByTitleContainingIgnoreCase(nome);
+  }
+
+  public List<Filme> BuscarFilmesRecomendadosPorFavoritos(String userId) {
+    List<Favorito> filmesFavoritos = repositoryFavoritos.findByUsuarioId(userId);
+
+    if (filmesFavoritos.isEmpty()) {
+      System.out.println("Nenhum filme favorito encontrado para o usuário: " + userId);
+      return List.of();
+    }
+
+    List<Filme> filmes = filmesFavoritos.stream()
+        .map(favorito -> repository.findById(favorito.getFilmeId()).orElse(null))
+        .filter(Objects::nonNull)
+        .toList();
+
+    Set<Integer> categoriasFavoritas = filmes.stream()
+        .flatMap(filme -> filme.getGenreIds().stream())
+        .collect(Collectors.toSet());
+
+    List<Filme> filmesRecomendados = repository
+        .findTop10ByGenreIdsInOrderByVoteAverageDesc(categoriasFavoritas.stream().toList());
+    System.out.println("Filmes recomendados para o usuário " + userId + ": " + filmesRecomendados);
+    return filmesRecomendados;
+  }
+
+  public List<Filme> filmesSemelhantes() {
+
+    // Busca todos os favoritos
+    List<Favorito> favoritos = repositoryFavoritos.findAll();
+
+    // Agrupa por filme
+    Map<String, List<Favorito>> agrupados = favoritos.stream()
+        .collect(Collectors.groupingBy(Favorito::getFilmeId));
+
+    // Pega apenas os filmes favoritados por pelo menos 2 usuários
+    List<String> filmesIds = agrupados.entrySet()
+        .stream()
+        .filter(entry -> entry.getValue().size() >= 2)
+        .map(Map.Entry::getKey)
+        .toList();
+
+    // Busca os filmes
+    return repository.findAllById(filmesIds);
+  }
+  public List<Filme> getFilmePorNome(String nome) {
+    return repository.findByTitleContainingIgnoreCase(nome);
+  }
+
+  public List<Filme> getFilmesMaisVistos() {
+    return repository.findTop20ByOrderByPopularityDescVoteAverageDescVoteCountDesc();
   }
 }

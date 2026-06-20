@@ -2797,10 +2797,7 @@
       "video": false,
       "vote_average": 7.705,
       "vote_count": 23641
-    }
-
-//---------------------fim-------------------------------------------------------////////////////
-
+    },
 {
       "adult": false,
       "backdrop_path": "/l1nekhf05HS5OpBr0vRqcD3NxoS.jpg",

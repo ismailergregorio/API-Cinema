@@ -56,4 +56,8 @@ public class ServicesUsuario {
         .map(User -> new DTOGetUsuario(User.getId(), User.getNome(), User.getEmail())).toList();
   }
 
+  public List<Usuario> users() {
+    return repositoryUsuario.findAll();
+  }
+
 }
